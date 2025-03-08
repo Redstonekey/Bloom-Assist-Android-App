@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Bloom Assist</string>
+<!-- Plant Detail Strings -->
+<string name="back">Zurück</string>
+<string name="plant_image">Pflanzenbild</string>
+<string name="plant_name_placeholder">Pflanzenname</string>
+<string name="moisture">Feuchtigkeit</string>
+<string name="moisture_status_placeholder">Status der Feuchtigkeit</string>
+<string name="care_tips">Pflegetipps</string>
+<string name="watering">Bewässerung</string>
+<string name="watering_tip_placeholder">Bewässerungstipps für diese Pflanze</string>
+<string name="light_needs">Lichtbedarf</string>
+<string name="light_tip_placeholder">Lichtbedarf für diese Pflanze</string>
+<string name="fertilizer">Dünger</string>
+<string name="fertilizer_tip_placeholder">Düngungstipps für diese Pflanze</string>
+<string name="historical_data">Historische Daten</string>
+<string name="chart_placeholder_text">Hier würde ein Diagramm der historischen Daten angezeigt werden.</string>
+<string name="edit">Bearbeiten</string>
+<string name="chat_with_ai">Chat mit AI</string>
+<string name="delete">Löschen</string>
+<string name="settings_drawer">Einstellungen</string>
+<string name="about_project_drawer">Über dieses Projekt</string>
+<string name="add_plant_drawer">Pflanze hinzufügen</string>
+<string name="ai_chat_drawer">KI Pflanzen Chat</string>
+<string name="home_drawer">Home</string>
+
+</resources>

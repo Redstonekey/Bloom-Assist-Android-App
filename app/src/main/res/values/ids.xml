@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="progressBar" type="id" />
+    <item name="swapCameraButton" type="id" />
+    <item name="openCameraButton" type="id" />
+    <item name="previewView" type="id" />
+    <item name="titleTextView" type="id" />
+    <item name="topLeftCorner" type="id" />
+</resources>
