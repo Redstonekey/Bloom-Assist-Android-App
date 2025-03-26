@@ -2,6 +2,7 @@ package de.joancode.bloomassist
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
@@ -22,6 +23,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.home)
+        window.decorView.apply {
+            systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                            or View.SYSTEM_UI_FLAG_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    )
+        }
 
         // Initialize DrawerLayout and NavigationView
         drawerLayout = findViewById(R.id.drawer_layout)
@@ -35,16 +43,24 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 R.id.nav_add_plant -> {
-                    // Handle Add a Plant action
+                    val intent = Intent(this, AddPlantActivity::class.java)
+                    startActivity(intent)
                 }
                 R.id.nav_chat -> {
-                    // Handle Chat with AI action
+                    val intent = Intent(this, AiChat::class.java)
+                    startActivity(intent)
                 }
-                R.id.nav_settings -> {
-                    // Handle Settings action
+                R.id.nav_user_settings -> {
+                    val intent = Intent(this, user::class.java)
                 }
                 R.id.nav_about -> {
-                    // Handle About this Project action
+                    val alertButton = findViewById<Button>(R.id.nav_about)
+                    AlertHandler.createNotificationChannel(this)
+                    alertButton.setOnClickListener {
+                        AlertHandler.sendNotification(this)
+                    }
+
+
                 }
             }
             drawerLayout.closeDrawer(GravityCompat.START) // Close the drawer after selection
@@ -59,11 +75,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Set up plant details button click listener
-//        btnPlantDetails = findViewById(R.id.btn_plant_details)
-//        btnPlantDetails.setOnClickListener {
-//            val intent = Intent(this, plant_details::class.java)
-//            startActivity(intent)
-//        }
+        btnPlantDetails = findViewById(R.id.btn_plant_details)
+        btnPlantDetails.setOnClickListener {
+            val intent = Intent(this, PlantDetails::class.java)
+            startActivity(intent)
+        }
 
         // Set up menu icon click listener to open the drawer
         val menuIcon: ImageView = findViewById(R.id.menuIcon)
@@ -75,11 +91,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, AddPlantActivity::class.java)
             startActivity(intent)
         }
-        val alertButton = findViewById<Button>(R.id.btn_plant_details)
-        AlertHandler.createNotificationChannel(this)
-        alertButton.setOnClickListener {
-            AlertHandler.sendNotification(this)
-        }
+//        val alertButton = findViewById<Button>(R.id.btn_plant_details)
+//        AlertHandler.createNotificationChannel(this)
+//        alertButton.setOnClickListener {
+//            AlertHandler.sendNotification(this)
+//        }
     }
 
 }

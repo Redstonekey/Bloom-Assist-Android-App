@@ -5,7 +5,7 @@
 <string name="plant_image">Pflanzenbild</string>
 <string name="plant_name_placeholder">Pflanzenname</string>
 <string name="moisture">Feuchtigkeit</string>
-<string name="moisture_status_placeholder">Status der Feuchtigkeit</string>
+<string name="moisture_status_placeholder">Feuchtigkeitsbalken</string>
 <string name="care_tips">Pflegetipps</string>
 <string name="watering">Bewässerung</string>
 <string name="watering_tip_placeholder">Bewässerungstipps für diese Pflanze</string>
@@ -19,9 +19,31 @@
 <string name="chat_with_ai">Chat mit AI</string>
 <string name="delete">Löschen</string>
 <string name="settings_drawer">Einstellungen</string>
-<string name="about_project_drawer">Über dieses Projekt</string>
+<string name="about_project_drawer">Test Benachrichtigung</string>
 <string name="add_plant_drawer">Pflanze hinzufügen</string>
 <string name="ai_chat_drawer">KI Pflanzen Chat</string>
 <string name="home_drawer">Home</string>
+<string name="send">send</string>
 
+
+
+<string name="email">Email</string>
+<string name="password">Password</string>
+<string name="language">Language:</string>
+
+<!-- English strings -->
+<string name="login">Login</string>
+<string name="signup">Sign up</string>
+<string name="already_have_account">Already have an account? Log in</string>
+<string name="no_account_signup">No account yet? Sign up now</string>
+
+<!-- German strings -->
+<string name="login_de">Login</string>
+<string name="signup_de">Registrieren</string>
+<string name="already_have_account_de">Haben Sie schon ein Konto? Anmelden</string>
+<string name="no_account_signup_de">Noch kein Konto erstellt? Jetzt Registrieren</string>
+    <string name="password_de">Passwort</string>
+    <string name="email_de">Email</string>
+    <string name="fill_all_fields">Fill in all fields!</string>
+    <string name="config_load_error">Failed to load configuration</string>
 </resources>

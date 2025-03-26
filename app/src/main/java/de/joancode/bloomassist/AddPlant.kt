@@ -1,6 +1,8 @@
 package de.joancode.bloomassist
 
 import android.Manifest
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -8,8 +10,14 @@ import android.graphics.Matrix
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -19,6 +27,7 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -27,17 +36,25 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import org.json.JSONObject
 
 class AddPlantActivity : AppCompatActivity() {
     private lateinit var previewView: PreviewView
     private lateinit var captureButton: FloatingActionButton
     private lateinit var progressBar: ProgressBar
+    private lateinit var loadingLayout: RelativeLayout  // Layout for loading screen
+    private lateinit var bottomRightCorner: ImageView
+    private lateinit var bottomLeftCorner: ImageView
+    private lateinit var topRightCorner: ImageView
+    private lateinit var topLeftCorner: ImageView
+    private lateinit var previewContainer: CardView
+
+
 
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
@@ -46,15 +63,53 @@ class AddPlantActivity : AppCompatActivity() {
     private val API_KEY = "2b10K63MkVEbJpGgJBqgTrnhT"
     private val PROJECT = "all"
     private val API_ENDPOINT = "https://api.plantnet.org/v1/identify/$PROJECT?api-key=$API_KEY"
+    private lateinit var scanLine: View
+    private lateinit var scanAnimation: ObjectAnimator
+    private lateinit var container: FrameLayout  // A container to load the loading layout
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.add_plant)
+        captureButton = findViewById(R.id.captureButton) // Stelle sicher, dass die ID stimmt
+        scanLine = findViewById(R.id.scanLine)
+
+        container = findViewById(R.id.container)  // Make sure you have a container in your layout
+
+        val btnback = findViewById<ImageButton>(R.id.btn_back)
+        btnback.setOnClickListener { finish() }
+
+        // Animation erstellen
+        scanAnimation = ObjectAnimator.ofFloat(scanLine, "translationY", 0f, 400f).apply {
+            duration = 1500 // 2 Sekunden für eine Bewegung
+            repeatMode = ValueAnimator.REVERSE
+            repeatCount = ValueAnimator.INFINITE
+            interpolator = LinearInterpolator()
+            start()
+        }
+
+        captureButton.setOnClickListener {
+            scanAnimation.cancel() // Scan-Animation stoppen
+            scanLine.visibility = View.GONE // Scan-Linie verstecken
+            progressBar.visibility = View.VISIBLE // Lade-Icon anzeigen
+            takePicture()
+        }
 
         previewView = findViewById(R.id.previewView)
         captureButton = findViewById(R.id.captureButton)
         progressBar = findViewById(R.id.progressBar)
+        bottomRightCorner = findViewById(R.id.bottomRightCorner)
+
+        bottomLeftCorner = findViewById(R.id.bottomLeftCorner)
+
+        topRightCorner = findViewById(R.id.topRightCorner)
+
+        topLeftCorner = findViewById(R.id.topLeftCorner)
+
+        previewContainer = findViewById(R.id.previewContainer)
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -63,8 +118,29 @@ class AddPlantActivity : AppCompatActivity() {
 
         captureButton.setOnClickListener {
             takePicture()
+            showLoadingLayout()
         }
+
     }
+    private fun showLoadingLayout() {
+        // Hide all relevant views
+        previewView.visibility = View.GONE
+        captureButton.visibility = View.GONE
+        scanLine.visibility = View.GONE
+        bottomRightCorner.visibility = View.GONE
+        bottomLeftCorner.visibility = View.GONE
+        topLeftCorner.visibility = View.GONE
+        topRightCorner.visibility = View.GONE
+        previewContainer.visibility = View.GONE
+
+        // Inflate and show the loading layout
+        val loadingView = layoutInflater.inflate(R.layout.loading, container, false)
+        container.removeAllViews()  // Remove any existing views in the container
+        container.addView(loadingView)  // Add the loading layout
+    }
+
+
+
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()

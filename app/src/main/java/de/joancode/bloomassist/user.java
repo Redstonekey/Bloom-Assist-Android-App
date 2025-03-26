@@ -16,5 +16,11 @@ public class user extends AppCompatActivity {
 
         ImageButton btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(v -> finish());
+        Button btn_signout = findViewById(R.id.btn_sign_out);
+        btn_signout.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AuthActivity.class);
+            startActivity(intent);
+        });
+
     }
 }

@@ -7,5 +7,8 @@
     <color name="primary_text">#FF000000</color>
     <color name="secondary_text">#B3424242</color>
     <color name="white_card">#E7E7E7</color>
+    <color name="colorPrimary">#76c893</color>
+    <color name="colorPrimaryDark">#34a0a4</color>
+    <color name="colorAccent">#ff6f61</color>
 
 </resources>
