@@ -6,4 +6,15 @@
     <item name="previewView" type="id" />
     <item name="titleTextView" type="id" />
     <item name="topLeftCorner" type="id" />
+    <item name="plantImage" type="id" />
+    <item name="moistureValue" type="id" />
+    <item name="moistureProgress" type="id" />
+    <item name="moistureStatus" type="id" />
+    <item name="wateringTip" type="id" />
+    <item name="lightTip" type="id" />
+    <item name="chartContainer" type="id" />
+    <item name="editButton" type="id" />
+    <item name="chatButton" type="id" />
+    <item name="deleteButton" type="id" />
+    <item name="fertilizerTip" type="id" />
 </resources>

@@ -55,59 +55,13 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:id="@+id/plantContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="10dp">
-
-                <!-- Plant Card 1 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/rounded_card_background"
-                    android:padding="15dp"
-                    android:layout_marginBottom="20dp"
-                    android:elevation="5dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:src="@drawable/default_plant"
-                        android:scaleType="centerCrop" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="1. Orchid"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:padding="10dp"
-                        android:textColor="@color/primary_text"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Feuchtigkeit: Keine Messdaten!"
-                        android:textSize="16sp"
-                        android:gravity="center"
-                        android:textColor="@color/primary_text"/>
-
-                    <Button
-                        android:id="@+id/btn_plant_details"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Mehr erfahren"
-                        android:backgroundTint="@color/secondary"
-                        android:textColor="@color/white"
-                        android:layout_gravity="center"
-                        android:padding="10dp"
-                        android:layout_marginTop="10dp" />
-                </LinearLayout>
+                android:padding="10dp" />
 
 
-            </LinearLayout>
         </ScrollView>
 
         <!-- Floating Add Plant Button -->
