@@ -30,14 +30,18 @@ class MainActivity : AppCompatActivity() {
                             or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     )
         }
-
+        val token = Token(this).getToken()
+        if (token == null) {
+            val intent = Intent(this, AuthActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
         // Initialize views
         drawerLayout = findViewById(R.id.drawer_layout)
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         plantContainer = findViewById(R.id.plantContainer)
         btnAddPlant = findViewById(R.id.fab_add)
-
-        val token = Token(this).getToken()
         if (token != null) {
             ApiService.getPlants(token) { success, plants, message ->
                 runOnUiThread {

@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken
 
 object ApiService {
     private var baseUrl: String = ""
+    fun getBaseUrl(): String = baseUrl
     private val configFetcher = GetConfig()
     private var isInitialized = false
 

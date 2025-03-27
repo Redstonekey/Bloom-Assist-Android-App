@@ -7,10 +7,12 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -31,6 +33,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -40,6 +43,8 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -47,7 +52,7 @@ class AddPlantActivity : AppCompatActivity() {
     private lateinit var previewView: PreviewView
     private lateinit var captureButton: FloatingActionButton
     private lateinit var progressBar: ProgressBar
-    private lateinit var loadingLayout: RelativeLayout  // Layout for loading screen
+    private lateinit var loadingLayout: RelativeLayout
     private lateinit var bottomRightCorner: ImageView
     private lateinit var bottomLeftCorner: ImageView
     private lateinit var topRightCorner: ImageView
@@ -348,10 +353,9 @@ class AddPlantActivity : AppCompatActivity() {
                 val result = json.getJSONArray("results").getJSONObject(0)
                 val species = result.getJSONObject("species")
                 val scientificName = species.getString("scientificName")
-                val score = result.getDouble("score")
 
-                val message = "Plant identified: $scientificName (confidence: ${(score * 100).toInt()}%)"
-                Toast.makeText(baseContext, message, Toast.LENGTH_LONG).show()
+                // Show plant details form
+                showPlantDetailsForm(scientificName)
             } else {
                 Toast.makeText(baseContext, "No plant identified", Toast.LENGTH_LONG).show()
             }
@@ -359,6 +363,84 @@ class AddPlantActivity : AppCompatActivity() {
             Log.e(TAG, "Error parsing API response", e)
             Toast.makeText(baseContext, "Error parsing API response", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun showPlantDetailsForm(scientificName: String) {
+        // Replace camera preview with form
+        container.removeAllViews()
+        val formView = layoutInflater.inflate(R.layout.plant_details_form, container, false)
+        container.addView(formView)
+
+        // Pre-fill the name field
+        val nameInput = formView.findViewById<TextInputEditText>(R.id.nameInput)
+        nameInput.setText(scientificName)
+
+        // Set current date
+        val dateInput = formView.findViewById<TextInputEditText>(R.id.dateInput)
+        dateInput.setText(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
+
+        // Handle form submission
+        formView.findViewById<Button>(R.id.submitButton).setOnClickListener {
+            submitPlantDetails(formView)
+        }
+    }
+
+    private fun submitPlantDetails(formView: View) {
+        val name = formView.findViewById<TextInputEditText>(R.id.nameInput).text.toString()
+        val type = formView.findViewById<TextInputEditText>(R.id.typeInput).text.toString()
+        val location = formView.findViewById<TextInputEditText>(R.id.locationInput).text.toString()
+        val date = formView.findViewById<TextInputEditText>(R.id.dateInput).text.toString()
+        val notes = formView.findViewById<TextInputEditText>(R.id.notesInput).text.toString()
+
+        // Create JSON body
+        val jsonBody = JSONObject().apply {
+            put("name", name)
+            put("plant_type", type)
+            put("plant_location", location)
+            put("plant_date", date)
+            put("notes", notes)
+        }
+
+        // Get token
+        val token = Token(this).getToken()
+        if (token == null) {
+            Toast.makeText(this, "Not authenticated", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Send to API
+        Thread {
+            try {
+                val client = OkHttpClient()
+                val request = Request.Builder()
+                    .url("${ApiService.getBaseUrl()}/api/add-plant")
+                    .post(RequestBody.create("application/json".toMediaTypeOrNull(), jsonBody.toString()))
+                    .addHeader("Authorization", "Bearer $token")
+                    .build()
+
+                client.newCall(request).execute().use { response ->
+                    val responseBody = response.body?.string()
+
+                    runOnUiThread {
+                        if (response.isSuccessful && responseBody != null) {
+                            val json = JSONObject(responseBody)
+                            if (json.getBoolean("success")) {
+                                Toast.makeText(this, "Plant added successfully", Toast.LENGTH_SHORT).show()
+                                finish()
+                            } else {
+                                Toast.makeText(this, json.getString("message"), Toast.LENGTH_LONG).show()
+                            }
+                        } else {
+                            Toast.makeText(this, "Error adding plant", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }.start()
     }
 
     override fun onDestroy() {
