@@ -30,7 +30,7 @@ public class AuthActivity extends AppCompatActivity {
         configFetcher.fetchConfig(config -> {
             if (config != null) {
                 String apiUrl = config.getAuthApiUrl();
-                authService = new AuthService(apiUrl);
+                authService = new AuthService(apiUrl, this);
                 runOnUiThread(() -> {
                     setupClickListeners();
                     binding.authButton.setEnabled(true);

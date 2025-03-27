@@ -7,9 +7,10 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
 
-class AuthService(private val baseUrl: String) {
+class AuthService(private val baseUrl: String, private val context: android.content.Context) {
     private val client = OkHttpClient()
     private val JSON = "application/json; charset=utf-8".toMediaType()
+    private val tokenManager = Token(context)
 
     data class AuthResponse(
         val success: Boolean,
@@ -50,6 +51,7 @@ class AuthService(private val baseUrl: String) {
                     email = if (jsonResponse.has("email")) jsonResponse.getString("email") else null
                 )
 
+                authResponse.token?.let { tokenManager.saveToken(it) }
                 callback.onSuccess(authResponse)
             }
         })
